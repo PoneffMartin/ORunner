@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#263238</color>
+    <color name="colorPrimaryDark">#ffffff</color>
+    <color name="colorAccent">#f44336</color>
+    <color name="orienteering">#FD5621</color>
+    <color name="gym">#FDBF06</color>
+    <color name="running">#4BAD4F</color>
+    <color name="swimming">#02BBF2</color>
+    <color name="skiing">#1380FD</color>
+    <color name="cycling">#FDBF06</color>
+</resources>

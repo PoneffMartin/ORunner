@@ -1,0 +1,51 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Style for divider in add details fragments-->
+    <style name="HorizontalViewDivider">
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/mdtp_neutral_pressed</item>
+    </style>
+
+    <!-- Style for divider in add details fragments-->
+    <style name="VerticalViewDivider">
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/mdtp_neutral_pressed</item>
+    </style>
+
+    <!-- Style for EditText(only) fields -->
+    <style name="SaveActivityEditText" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Style for all view titles in save activity fragments-->
+    <style name="SaveActivityViewTitle" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">#B9B8C3</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+
+    <style name="AppButton">
+        <item name="android:popupBackground">#BEFFFFFF</item>
+        <item name="android:background">@drawable/btn_next</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/mdtp_white</item>
+    </style>
+</resources>

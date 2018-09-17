@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <!-- The layout of toolbar-->
+    <include layout="@layout/toolbar"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:src="@drawable/orienteering_symbol"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:text="ORunner is a simple activity tracking application focused on Orienteering. You can keep track of your activities and see reports. When you add an activity, you can choose if it is Competition or Training and also take a photo of the map or choose one from your smartphone's gallery. There are pages containing more detailed summary of each month with distance, duration and total number of activities as well as page with all maps from competitions and trainings."
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="5dp"
+        android:text="Version 1.0"
+        />
+</LinearLayout>

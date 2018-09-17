@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="classes">
+        <item>W10</item>
+        <item>W12</item>
+        <item>W14</item>
+        <item>W16</item>
+        <item>W18</item>
+        <item>W20</item>
+        <item>W21E</item>
+        <item>W21A</item>
+        <item>W21B</item>
+        <item>W35</item>
+        <item>W40</item>
+        <item>W45</item>
+        <item>W50</item>
+        <item>W55</item>
+        <item>W60</item>
+        <item>W65</item>
+        <item>W70</item>
+        <item>W75</item>
+        <item>W80</item>
+        <item>W85</item>
+        <item>W90</item>
+        <item>W95</item>
+        <item>M10</item>
+        <item>M12</item>
+        <item>M14</item>
+        <item>M16</item>
+        <item>M18</item>
+        <item>M20</item>
+        <item>M21E</item>
+        <item>M21A</item>
+        <item>M21B</item>
+        <item>M35</item>
+        <item>M40</item>
+        <item>M45</item>
+        <item>M50</item>
+        <item>M55</item>
+        <item>M60</item>
+        <item>M65</item>
+        <item>M70</item>
+        <item>M75</item>
+        <item>M80</item>
+        <item>M85</item>
+        <item>M90</item>
+        <item>M95</item>
+    </string-array>
+
+    <string-array name="genders">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="distance_units">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+
+</resources>

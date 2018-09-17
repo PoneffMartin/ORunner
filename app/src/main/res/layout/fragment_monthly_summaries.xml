@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <!-- The layout of toolbar-->
+    <include layout="@layout/toolbar"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Year"
+        android:textColor="#B9B8C3"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-smallcaps"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/iv_next_year"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_left_white"
+            />
+
+        <TextView
+            android:id="@+id/tv_current_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:gravity="center"
+            android:text="2018"
+            android:textSize="40sp"
+            android:textColor="@android:color/white"
+            android:fontFamily="sans-serif-smallcaps"
+            />
+
+        <ImageView
+            android:id="@+id/iv_previous_year"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_right_white"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/month_reports_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:padding="10dp">
+        </android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/rl_no_month_reports"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <ImageView
+                android:layout_width="192dp"
+                android:layout_height="192dp"
+                android:layout_above="@+id/tv_no_month_reports"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/empty_state" />
+            <TextView
+                android:id="@+id/tv_no_month_reports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:text="No month reports"
+                android:textColor="#DAFFFFFF"
+                android:textSize="20sp"
+                />
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

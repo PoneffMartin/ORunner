@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2B2E4A</color>
+    <color name="colorPrimaryDark">#22243B</color>
+    <color name="colorAccent">#F67280</color>
+    <color name="training">#4286f4</color>
+    <color name="competition">#F67280</color>
+</resources>
