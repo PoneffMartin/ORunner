@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mponeff.orunner.R;
 import com.mponeff.orunner.activities.ViewActivity;
@@ -24,18 +27,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ActivitiesFragment extends Fragment {
+public class HistoryFragment extends Fragment {
 
-    @BindView(R.id.rv_recent_exercises)
+    @BindView(R.id.rv_history)
     RecyclerView mRecyclerView;
-    @BindView(R.id.rl_no_activities)
-    RelativeLayout mRlNoExercises;
+    @BindView(R.id.ll_no_activities)
+    LinearLayout mLlNoExercises;
 
     private ActivityAdapter mAdapter;
-
-    public static Fragment newInstance() {
-        return new ActivitiesFragment();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,12 +49,19 @@ public class ActivitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_activities_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, rootView);
+
+        /* Get the views manually since they are part of the parent view */
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_toolbar);
+        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity.setSupportActionBar(toolbar);
+        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        /*toolbarTitle.setText("History");*/
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
 
         mAdapter = new ActivityAdapter(getContext(), new Comparator<Activity>() {
             @Override
@@ -82,9 +88,9 @@ public class ActivitiesFragment extends Fragment {
 
         if (activities.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
-            mRlNoExercises.setVisibility(View.VISIBLE);
+            mLlNoExercises.setVisibility(View.VISIBLE);
         } else {
-            mRlNoExercises.setVisibility(View.GONE);
+            mLlNoExercises.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.replaceAll(activities);
         }
