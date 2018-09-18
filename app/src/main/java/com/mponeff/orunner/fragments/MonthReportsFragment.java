@@ -27,9 +27,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MonthlySummariesFragment extends Fragment {
+public class MonthReportsFragment extends Fragment {
 
-    private static final String TAG = MonthlySummariesFragment.class.getSimpleName();
+    private static final String TAG = MonthReportsFragment.class.getSimpleName();
 
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
@@ -49,7 +49,7 @@ public class MonthlySummariesFragment extends Fragment {
     private int year;
 
     public static Fragment getInstance() {
-        return new MonthlySummariesFragment();
+        return new MonthReportsFragment();
     }
 
     @Override
