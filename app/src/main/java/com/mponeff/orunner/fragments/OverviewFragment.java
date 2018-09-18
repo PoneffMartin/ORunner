@@ -39,7 +39,7 @@ import butterknife.ButterKnife;
 public class OverviewFragment extends Fragment {
     public static final String TAG = OverviewFragment.class.getSimpleName();
 
-    @BindView(R.id.rv_recent_exercises)
+    @BindView(R.id.rv_history)
     RecyclerView mRecyclerView;
     @BindView(R.id.ll_custom_view)
     LinearLayout llCustomView;
