@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.mponeff.orunner.R;
-import com.mponeff.orunner.activities.SettingsActivity;
 import com.mponeff.orunner.data.entities.MonthSummary;
+import com.mponeff.orunner.fragments.SettingsFragment;
 import com.mponeff.orunner.utils.DateTimeUtils;
 
 import java.util.Comparator;
@@ -75,7 +75,7 @@ public class MonthReportsListAdapter extends RecyclerView.Adapter<MonthReportsLi
         mComparator = comparator;
         mContext = context;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mUnits = sharedPreferences.getString(SettingsActivity.PreferencesFragment.KEY_UNITS, "");
+        mUnits = sharedPreferences.getString(SettingsFragment.KEY_UNITS, "");
     }
 
     public Context getContext() {
