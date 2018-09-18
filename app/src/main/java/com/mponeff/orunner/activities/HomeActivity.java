@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -21,8 +22,13 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mponeff.orunner.R;
+import com.mponeff.orunner.fragments.AboutFragment;
 import com.mponeff.orunner.fragments.ChooseTypeDialog;
+import com.mponeff.orunner.fragments.HistoryFragment;
+import com.mponeff.orunner.fragments.MapsFragment;
+import com.mponeff.orunner.fragments.MonthReportsFragment;
 import com.mponeff.orunner.fragments.OverviewFragment;
+import com.mponeff.orunner.fragments.SettingsFragment;
 import com.mponeff.orunner.utils.Network;
 
 import butterknife.BindView;
@@ -128,22 +134,42 @@ public class HomeActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem item) {
         int id = item.getItemId();
+        Fragment fragment = null;
         switch (id) {
+            case R.id.home:
+                fragment = new OverviewFragment();
+                mFab.show();
+                break;
+            case R.id.activities:
+                fragment = new HistoryFragment();
+                mFab.show();
+                break;
             case R.id.log_out:
                 signOut();
                 break;
             case R.id.maps:
-                startMapsActivity();
+                fragment = new MapsFragment();
+                mFab.show();
                 break;
             case R.id.settings:
-                startSettingsActivity();
+                fragment = new SettingsFragment();
+                mFab.hide();
                 break;
             case R.id.reports:
-                startReportsActivity();
+                fragment = new MonthReportsFragment();
+                mFab.show();
                 break;
             case R.id.about:
-                startAboutActivity();
+                fragment = new AboutFragment();
+                mFab.hide();
         }
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+
+        mToolbarTitle.setText(item.getTitle());
 
         mDrawer.closeDrawer(GravityCompat.START);
     }
@@ -159,25 +185,5 @@ public class HomeActivity extends AppCompatActivity {
         signInActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
         startActivity(signInActivity);
         //finish();
-    }
-
-    private void startMapsActivity() {
-        Intent mapsActivity = new Intent(HomeActivity.this, MapsActivity.class);
-        startActivity(mapsActivity);
-    }
-
-    private void startSettingsActivity() {
-        Intent settingsActivity = new Intent(HomeActivity.this, SettingsActivity.class);
-        startActivity(settingsActivity);
-    }
-
-    private void startReportsActivity() {
-        Intent reportsActivity = new Intent(HomeActivity.this, MonthlySummariesActivity.class);
-        startActivity(reportsActivity);
-    }
-
-    private void startAboutActivity() {
-        Intent aboutActivity = new Intent(HomeActivity.this, AboutActivity.class);
-        startActivity(aboutActivity);
     }
 }
