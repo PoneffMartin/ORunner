@@ -25,7 +25,7 @@ import com.mponeff.orunner.activities.ViewActivity;
 import com.mponeff.orunner.adapters.ActivityAdapter;
 import com.mponeff.orunner.data.entities.Activity;
 import com.mponeff.orunner.data.entities.CustomView;
-import com.mponeff.orunner.data.entities.MonthSummary;
+import com.mponeff.orunner.data.entities.MonthReport;
 import com.mponeff.orunner.utils.DateTimeUtils;
 import com.mponeff.orunner.utils.OnSwipeTouchListener;
 import com.mponeff.orunner.viewmodels.ActivitiesModel;
@@ -120,12 +120,12 @@ public class OverviewFragment extends Fragment {
         return rootView;
     }
 
-    private void loadChart(MonthSummary monthSummary) {
+    private void loadChart(MonthReport monthReport) {
 
-        int total = monthSummary.getTotalActivities();
+        int total = monthReport.getTotalActivities();
         if (total > 0) {
             /* Competitions */
-            int competitions = monthSummary.getCompetitions().size();
+            int competitions = monthReport.getCompetitions().size();
             SeriesItem seriesItem1 = new SeriesItem.Builder(Color.parseColor("#F67280"))
                     .setRange(0, total, 0)
                     .setLineWidth(18f)
@@ -135,7 +135,7 @@ public class OverviewFragment extends Fragment {
             int series1Index = mChart.addSeries(seriesItem1);
 
             /* Trainings */
-            int trainings = monthSummary.getTrainings().size();
+            int trainings = monthReport.getTrainings().size();
             SeriesItem seriesItem2 = new SeriesItem.Builder(Color.parseColor("#4286f4"))
                     .setRange(0, total, 0)
                     .setLineWidth(18f)
@@ -153,22 +153,22 @@ public class OverviewFragment extends Fragment {
     }
 
     private void showOverview(List<Activity> activities) {
-        MonthSummary monthSummary = new MonthSummary(activities);
-        loadChart(monthSummary);
+        MonthReport monthReport = new MonthReport(activities);
+        loadChart(monthReport);
 
         /* Initialize custom views array */
         /* TODO Export string resources */
-        mCustomViews[0] = new CustomView(String.valueOf(monthSummary.getTotalActivities()), "Activities");
-        mCustomViews[1] = new CustomView(String.valueOf(monthSummary.getTotalDistance()), "Distance");
-        mCustomViews[2] = new CustomView(DateTimeUtils.convertSecondsToTimeString(monthSummary.getTotalDuration()), "Duration");
+        mCustomViews[0] = new CustomView(String.valueOf(monthReport.getTotalActivities()), "Activities");
+        mCustomViews[1] = new CustomView(String.valueOf(monthReport.getTotalDistance()), "Distance");
+        mCustomViews[2] = new CustomView(DateTimeUtils.convertSecondsToTimeString(monthReport.getTotalDuration()), "Duration");
 
         /* Set initial custom view and slider position */
         tvCustomField_1.setText(mCustomViews[0].getField_1());
         tvCustomField_2.setText(mCustomViews[0].getField_2());
         slideDot(0);
 
-        tvTrainingsCount.setText(String.valueOf(monthSummary.getTrainingsCount()));
-        tvCompetitionsCount.setText(String.valueOf(monthSummary.getCompetitionsCount()));
+        tvTrainingsCount.setText(String.valueOf(monthReport.getTrainingsCount()));
+        tvCompetitionsCount.setText(String.valueOf(monthReport.getCompetitionsCount()));
 
         if (activities.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);

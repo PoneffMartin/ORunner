@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import com.mponeff.orunner.ORunnerApp;
 import com.mponeff.orunner.data.ActivitiesDataSource;
 import com.mponeff.orunner.data.entities.Activity;
-import com.mponeff.orunner.data.entities.MonthSummary;
+import com.mponeff.orunner.data.entities.MonthReport;
 import com.mponeff.orunner.utils.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -20,101 +20,101 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class MonthReportViewModel extends AndroidViewModel {
-
     private static final String TAG = MonthReportViewModel.class.getSimpleName();
 
     @Inject
     ActivitiesDataSource mActivitiesDataSource;
-    private MutableLiveData<List<MonthSummary>> mAllSummaries;
-    private MutableLiveData<MonthSummary> mSummary;
+    private MutableLiveData<List<MonthReport>> mAllReports;
+    private MutableLiveData<MonthReport> mCurrentReport;
 
     public MonthReportViewModel(@NonNull Application application) {
         super(application);
         ((ORunnerApp) getApplication()).getDataSourceComponent().inject(this);
     }
 
-    public LiveData<List<MonthSummary>> getSummaries(int year) {
-        this.mAllSummaries = new MutableLiveData<>();
-        //loadAllSummaries(year);
-        return this.mAllSummaries;
+    /**
+     * Load all month reports.
+     * @return LiveData object containing list of all objects representing month summary.
+     */
+    public LiveData<List<MonthReport>> getAllReports() {
+        if (this.mAllReports == null) {
+            this.mAllReports = new MutableLiveData<>();
+            loadAllReports();
+        }
+
+        return this.mAllReports;
     }
 
-    public LiveData<MonthSummary> getCurrentReport() {
-        if (this.mSummary == null) {
-            this.mSummary = new MutableLiveData<>();
+    /**
+     * Load the report for the current month.
+     * @return LiveData object containing month summary object for the current month.
+     */
+    public LiveData<MonthReport> getCurrentReport() {
+        if (this.mCurrentReport == null) {
+            this.mCurrentReport = new MutableLiveData<>();
             loadCurrentReport();
         }
 
-        return this.mSummary;
+        return this.mCurrentReport;
     }
 
-    public LiveData<List<MonthSummary>> getReports() {
-        if (this.mAllSummaries == null) {
-            this.mAllSummaries = new MutableLiveData<>();
-            //oadAllSummaries();
-        }
-
-        return this.mAllSummaries;
-    }
-
-    /*private void loadAllSummaries() {
-        this.loadAllSummaries(DateTimeUtils.DEFAULT_YEAR);
-    }*/
-
-    /*private void loadAllSummaries(int year) {
+    private void loadAllReports() {
         this.mActivitiesDataSource.getActivities(new ActivitiesDataSource.GetActivitiesCallback(){
             @Override
             public void onSuccess(List<Activity> activities) {
-                List<MonthSummary> reports = createReports(activities);
-                mAllSummaries.setValue(reports);
+                List<MonthReport> reports = createReports(activities);
+                mAllReports.setValue(reports);
             }
 
             @Override
             public void onFailure() {
-                mAllSummaries.setValue(null);
-            }
-        }, year);
-    }*/
-
-    private void loadCurrentReport() {
-        this.mActivitiesDataSource.getActivities(new ActivitiesDataSource.GetActivitiesCallback(){
-            @Override
-            public void onSuccess(List<Activity> activities) {
-                MonthSummary monthSummary = new MonthSummary(activities);
-                mSummary.setValue(monthSummary);
-            }
-
-            @Override
-            public void onFailure() {
-                mSummary.setValue(null);
+                mAllReports.setValue(null);
             }
         });
     }
 
-    private List<MonthSummary> createReports(List<Activity> activities) {
-        Map<Integer, HashMap<Integer, List<Activity>>> months = new HashMap<>();
+    private void loadCurrentReport() {
+        int currentYear = DateTimeUtils.getCurrentYear();
+        int currentMonth = DateTimeUtils.getCurrentMonth();
+        this.mActivitiesDataSource.getActivities(new ActivitiesDataSource.GetActivitiesCallback(){
+            @Override
+            public void onSuccess(List<Activity> activities) {
+                MonthReport monthReport = new MonthReport(activities, currentYear, currentMonth);
+                mCurrentReport.setValue(monthReport);
+            }
+
+            @Override
+            public void onFailure() {
+                mCurrentReport.setValue(null);
+            }
+        }, currentYear, currentMonth);
+    }
+
+    private List<MonthReport> createReports(List<Activity> activities) {
+        /* Year -> Month -> List of activities */
+        Map<Integer, HashMap<Integer, List<Activity>>> allReportsMap = new HashMap<>();
         int month;
         int year;
         for (Activity activity : activities) {
             month = DateTimeUtils.getMonthFromMillis(activity.getStartDateTime());
             year = DateTimeUtils.getYearFromMillis(activity.getStartDateTime());
 
-            if (!months.containsKey(year)) {
-                months.put(year, new HashMap<>());
+            if (!allReportsMap.containsKey(year)) {
+                allReportsMap.put(year, new HashMap<>());
             }
-            if (!months.get(year).containsKey(month)) {
-                months.get(year).put(month, new ArrayList<>());
+            if (!allReportsMap.get(year).containsKey(month)) {
+                allReportsMap.get(year).put(month, new ArrayList<>());
             }
 
-            months.get(year).get(month).add(activity);
+            allReportsMap.get(year).get(month).add(activity);
         }
 
-        List<MonthSummary> reports = new ArrayList<>();
-        for (Map.Entry<Integer, HashMap<Integer, List<Activity>>> mapEntry : months.entrySet()) {
-            for (Map.Entry<Integer, List<Activity>> entry : mapEntry.getValue().entrySet()) {
+        List<MonthReport> reports = new ArrayList<>();
+        for (Map.Entry<Integer, HashMap<Integer, List<Activity>>> mapEntry : allReportsMap.entrySet()) {
+            for (Map.Entry<Integer, List<Activity>> innerEntry : mapEntry.getValue().entrySet()) {
                 year = mapEntry.getKey();
-                month = entry.getKey();
-                MonthSummary report = new MonthSummary(entry.getValue(), month, year);
+                month = innerEntry.getKey();
+                MonthReport report = new MonthReport(innerEntry.getValue(), year, month);
                 reports.add(report);
             }
         }

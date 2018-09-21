@@ -1,12 +1,8 @@
 package com.mponeff.orunner.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +11,23 @@ import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.mponeff.orunner.R;
-import com.mponeff.orunner.data.entities.MonthSummary;
-import com.mponeff.orunner.fragments.SettingsFragment;
+import com.mponeff.orunner.data.entities.MonthReport;
 import com.mponeff.orunner.utils.DateTimeUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MonthReportsListAdapter extends RecyclerView.Adapter<MonthReportsListAdapter.ViewHolder> {
+    private static final String TAG = ActivityAdapter.class.getSimpleName();
 
-    private static final String LOG_TAG = ActivityAdapter.class.getSimpleName();
-
-    private final Comparator<MonthSummary> mComparator;
-    private Context mContext;
-    private String  mUnits;
-    private int mExpandedPosition = -1;
-    private RecyclerView mRecyclerView;
-
-    private final SortedList<MonthSummary> mMonthReportsList = new SortedList<>(MonthSummary.class,
-            new SortedList.Callback<MonthSummary>() {
+    private final Comparator<MonthReport> mComparator;
+    private final SortedList<MonthReport> mMonthReportsList = new SortedList<>(MonthReport.class,
+            new SortedList.Callback<MonthReport>() {
                 @Override
-                public int compare(MonthSummary month_1, MonthSummary month_2) {
+                public int compare(MonthReport month_1, MonthReport month_2) {
                     return mComparator.compare(month_1, month_2);
                 }
 
@@ -60,26 +52,19 @@ public class MonthReportsListAdapter extends RecyclerView.Adapter<MonthReportsLi
                 }
 
                 @Override
-                public boolean areContentsTheSame(MonthSummary oldItem, MonthSummary newItem) {
+                public boolean areContentsTheSame(MonthReport oldItem, MonthReport newItem) {
                     return oldItem.equals(newItem);
                 }
 
                 @Override
-                public boolean areItemsTheSame(MonthSummary item1, MonthSummary item2) {
+                public boolean areItemsTheSame(MonthReport item1, MonthReport item2) {
                     return item1 == item2;
                 }
             });
 
 
-    public MonthReportsListAdapter(Context context, Comparator<MonthSummary> comparator) {
+    public MonthReportsListAdapter(Comparator<MonthReport> comparator) {
         mComparator = comparator;
-        mContext = context;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mUnits = sharedPreferences.getString(SettingsFragment.KEY_UNITS, "");
-    }
-
-    public Context getContext() {
-        return mContext;
     }
 
     @Override
@@ -87,60 +72,25 @@ public class MonthReportsListAdapter extends RecyclerView.Adapter<MonthReportsLi
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View activityView = inflater.inflate(R.layout.item_month_summary, parent, false);
-        ViewHolder viewHolder = new ViewHolder(activityView);
-        return viewHolder;
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
-        mRecyclerView = recyclerView;
+        return new ViewHolder(activityView);
     }
 
     @Override
     public void onBindViewHolder(MonthReportsListAdapter.ViewHolder holder, int position) {
-
-        Log.e(LOG_TAG, "onBIndViewHolder");
-        MonthSummary monthInfo = mMonthReportsList.get(position);
+        MonthReport monthInfo = mMonthReportsList.get(position);
 
         String monthName = DateTimeUtils.getMonthName(monthInfo.getMonth());
         long totalDuration = monthInfo.getTotalDuration();
         long totalActivities = monthInfo.getTotalActivities();
-        float totalDistance;
-        String totalPace;
-        String units;
-
-        if (mUnits.equalsIgnoreCase(mContext.getString(R.string.units_imperial))) {
-            totalDistance = monthInfo.getTotalDistanceInMiles();
-            totalPace = monthInfo.getTotalPaceInImperial();
-            units = mContext.getString(R.string.unit_mil);
-        } else {
-            totalDistance = monthInfo.getTotalDistance();
-            totalPace = monthInfo.getTotalPace();
-            units = mContext.getString(R.string.unit_km);
-        }
-
-        boolean isExpanded = position == mExpandedPosition;
-        holder.llSummaryDetails.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
-        holder.itemView.setActivated(isExpanded);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : holder.getAdapterPosition();
-                TransitionManager.beginDelayedTransition(mRecyclerView);
-                notifyItemChanged(holder.getAdapterPosition());
-            }
-        });
-
+        float totalDistance = monthInfo.getTotalDistance();
+        String totalPace = monthInfo.getTotalPace();
         float trainingsDistance = monthInfo.getTrainingsTotalDistance();
         float competitionsDistance = monthInfo.getCompetitionsTotalDistance();
         int trainingsPercent = (int)((trainingsDistance / totalDistance) * 100);
         int competitionsPercent = 100 - trainingsPercent;
 
-        /** Cell title */
         holder.tvMonth.setText(String.format("%s", monthName));
-        holder.tvDistance.setText(String.format("%.1f", totalDistance));
-        holder.tvDistanceUnit.setText(units);
+        holder.tvDistance.setText(String.format("%.1fkm", totalDistance));
         holder.tvTrainingsDistance.setText(String.format("%.1fkm", trainingsDistance));
         holder.tvCompetitionsDistance.setText(String.format("%.1fkm", competitionsDistance));
         holder.pbTrainings.setMax((int)(totalDistance * 10));
@@ -164,70 +114,67 @@ public class MonthReportsListAdapter extends RecyclerView.Adapter<MonthReportsLi
         return mMonthReportsList.get(position).hashCode();
     }
 
-    public void add(MonthSummary monthSummary) {
-        mMonthReportsList.add(monthSummary);
+    public void add(MonthReport monthReport) {
+        mMonthReportsList.add(monthReport);
     }
 
-    public void remove(MonthSummary monthSummary) {
-        mMonthReportsList.remove(monthSummary);
+    public void remove(MonthReport monthReport) {
+        mMonthReportsList.remove(monthReport);
     }
 
-    public void add(List<MonthSummary> monthSummaries) {
+    public void add(List<MonthReport> monthSummaries) {
         mMonthReportsList.addAll(monthSummaries);
     }
 
-    public void remove(List<MonthSummary> monthSummaries) {
+    public void remove(List<MonthReport> monthSummaries) {
         mMonthReportsList.beginBatchedUpdates();
-        for (MonthSummary monthSummary : monthSummaries) {
-            mMonthReportsList.remove(monthSummary);
+        for (MonthReport monthReport : monthSummaries) {
+            mMonthReportsList.remove(monthReport);
         }
         mMonthReportsList.endBatchedUpdates();
     }
 
-    public void replaceAll(List<MonthSummary> monthSummaries) {
+    public void replaceAll(List<MonthReport> monthSummaries) {
         mMonthReportsList.beginBatchedUpdates();
         for (int i = mMonthReportsList.size() - 1; i >= 0; i--) {
-            final MonthSummary monthSummary = mMonthReportsList.get(i);
-            if (!monthSummaries.contains(monthSummary)) {
-                mMonthReportsList.remove(monthSummary);
+            final MonthReport monthReport = mMonthReportsList.get(i);
+            if (!monthSummaries.contains(monthReport)) {
+                mMonthReportsList.remove(monthReport);
             }
         }
         mMonthReportsList.addAll(monthSummaries);
         mMonthReportsList.endBatchedUpdates();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        /** Cell title */
-        protected TextView tvMonth;
-        protected TextView tvDistance;
-        protected TextView tvDistanceUnit;
-        protected NumberProgressBar pbTrainings;
-        protected NumberProgressBar pbCompetitions;
-        protected TextView tvTrainingsDistance;
-        protected TextView tvCompetitionsDistance;
-        protected TextView tvTrainingsPercent;
-        protected TextView tvCompetitionsPercent;
-        protected LinearLayout llSummaryDetails;
-        protected TextView tvActivities;
-        protected TextView tvDuration;
-        protected TextView tvPace;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.tv_month)
+        TextView tvMonth;
+        @BindView(R.id.tv_distance)
+        TextView tvDistance;
+        @BindView(R.id.trainings_bar)
+        NumberProgressBar pbTrainings;
+        @BindView(R.id.competitions_bar)
+        NumberProgressBar pbCompetitions;
+        @BindView(R.id.tv_trainings_distance)
+        TextView tvTrainingsDistance;
+        @BindView(R.id.tv_competitions_distance)
+        TextView tvCompetitionsDistance;
+        @BindView(R.id.tv_trainings_percent)
+        TextView tvTrainingsPercent;
+        @BindView(R.id.tv_competitions_percent)
+        TextView tvCompetitionsPercent;
+        @BindView(R.id.ll_summary_details)
+        LinearLayout llSummaryDetails;
+        @BindView(R.id.tv_activities)
+        TextView tvActivities;
+        @BindView(R.id.tv_duration)
+        TextView tvDuration;
+        @BindView(R.id.tv_pace)
+        TextView tvPace;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-
-            tvMonth = (TextView) itemView.findViewById(R.id.tv_month);
-            tvDistance = (TextView) itemView.findViewById(R.id.tv_distance);
-            tvDistanceUnit = (TextView) itemView.findViewById(R.id.tv_distance_unit);
-            pbTrainings = (NumberProgressBar) itemView.findViewById(R.id.trainings_bar);
-            pbCompetitions = (NumberProgressBar) itemView.findViewById(R.id.competitions_bar);
-            tvTrainingsDistance = (TextView) itemView.findViewById(R.id.tv_trainings_distance);
-            tvCompetitionsDistance = (TextView) itemView.findViewById(R.id.tv_competitions_distance);
-            tvTrainingsPercent = (TextView) itemView.findViewById(R.id.tv_trainings_percent);
-            tvCompetitionsPercent = (TextView) itemView.findViewById(R.id.tv_competitions_percent);
-            llSummaryDetails = itemView.findViewById(R.id.ll_summary_details);
-            tvActivities = itemView.findViewById(R.id.tv_activities);
-            tvDuration = itemView.findViewById(R.id.tv_duration);
-            tvPace = itemView.findViewById(R.id.tv_pace);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

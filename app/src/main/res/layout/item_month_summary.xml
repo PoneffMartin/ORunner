@@ -39,31 +39,16 @@
             android:text="Distance"
             />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_distance"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/tv_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="48sp"
-                android:textColor="@android:color/black"
-                android:maxLength="9"
-                android:fontFamily="sans-serif-smallcaps"
-                tools:text="356.5"
-                />
-            <TextView
-                android:id="@+id/tv_distance_unit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="40sp"
-                android:textColor="@android:color/black"
-                android:maxLength="3"
-                android:fontFamily="sans-serif-smallcaps"
-                android:text="km"
-                />
-        </LinearLayout>
+            android:textSize="48sp"
+            android:textColor="@android:color/black"
+            android:maxLength="9"
+            android:fontFamily="sans-serif-smallcaps"
+            tools:text="356.5km"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,7 +81,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_marginRight="2dp"
                         android:layout_marginEnd="2dp"
                         custom:progress_unreached_color="#CCCCCC"
                         custom:progress_reached_color="@color/training"
@@ -169,7 +153,6 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:layout_marginRight="2dp"
                         android:layout_marginEnd="2dp"
                         custom:progress_unreached_color="#CCCCCC"
                         custom:progress_reached_color="@color/competition"
@@ -230,49 +213,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:baselineAligned="false"
-            android:visibility="visible">
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:textColor="#B9B8C3"
-                    android:text="@string/activities"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_activities"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:textSize="28sp"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:textColor="@android:color/black"
-                    tools:text="0"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:gravity="center_horizontal"
                     android:textSize="14sp"
                     android:fontFamily="sans-serif-smallcaps"
                     android:textColor="#B9B8C3"
@@ -283,13 +234,41 @@
                     android:id="@+id/tv_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:textSize="28sp"
                     android:textColor="@android:color/black"
                     android:fontFamily="sans-serif-smallcaps"
                     tools:text="99:59h"
                     />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:textColor="#B9B8C3"
+                    android:text="@string/activities"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_activities"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textSize="28sp"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:textColor="@android:color/black"
+                    tools:text="0"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -326,7 +305,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAllCaps="false"
-            android:text="View details"
+            android:text="View all activities"
             />
     </LinearLayout>
 </LinearLayout>

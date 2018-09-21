@@ -1,13 +1,12 @@
 package com.mponeff.orunner.data.entities;
 
 import com.mponeff.orunner.utils.Calculations;
-import com.mponeff.orunner.utils.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class MonthSummary {
+public class MonthReport {
 
     private final List<Activity> activities = new ArrayList<>();
     private final int month;
@@ -15,13 +14,14 @@ public class MonthSummary {
     private long totalDuration;
     private float totalDistance;
 
-    public MonthSummary(List<Activity> allActivities, int month, int year) {
-        this.month = month;
+    public MonthReport(List<Activity> allActivities, int year, int month) {
         this.year = year;
+        this.month = month;
         this.createReport(allActivities);
     }
 
-    public MonthSummary(List<Activity> allActivities) {
+    // TODO To remove
+    public MonthReport(List<Activity> allActivities) {
         Calendar date = Calendar.getInstance();
         this.month = date.get(Calendar.MONTH);
         this.year = date.get(Calendar.YEAR);
@@ -117,11 +117,7 @@ public class MonthSummary {
 
     private void createReport(List<Activity> activities) {
         for (Activity activity : activities) {
-            int startMonth = DateTimeUtils.getMonthFromMillis(activity.getStartDateTime());
-            int startYear = DateTimeUtils.getYearFromMillis(activity.getStartDateTime());
-            if (startMonth == this.month && startYear == this.year) {
-                this.addActivity(activity);
-            }
+            this.addActivity(activity);
         }
     }
 
