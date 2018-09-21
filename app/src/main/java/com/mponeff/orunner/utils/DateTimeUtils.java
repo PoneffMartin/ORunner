@@ -187,7 +187,7 @@ public class DateTimeUtils {
      * The date is set to 00:00:00 on the 1-st day of the given month.
      * @param year the year to be set on Calendar.YEAR field
      * @param month the month to be set on Calendar.MONTH field
-     * @return the time in milliseconds
+     * @return the time in milliseconds on the start of the month
      */
     public static long getStartMillis(int year, int month) {
         Calendar start = Calendar.getInstance();
@@ -202,7 +202,7 @@ public class DateTimeUtils {
      * To get the last day of the month use the add method from Calendar API.
      * @param year the year to be set on Calendar.YEAR field
      * @param month the month to be set on Calendar.MONTH field
-     * @return the time in milliseconds
+     * @return the time in milliseconds on the end of the month
      */
     public static long getEndMillis(int year, int month) {
         Calendar end = Calendar.getInstance();
