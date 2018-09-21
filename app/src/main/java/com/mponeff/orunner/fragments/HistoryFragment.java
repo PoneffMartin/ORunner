@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.mponeff.orunner.R;
 import com.mponeff.orunner.activities.ViewActivity;
@@ -51,14 +48,6 @@ public class HistoryFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, rootView);
-
-        /* Get the views manually since they are part of the parent view */
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.main_toolbar);
-        TextView toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
-        appCompatActivity.setSupportActionBar(toolbar);
-        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        /*toolbarTitle.setText("History");*/
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

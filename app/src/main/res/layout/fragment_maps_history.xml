@@ -1,79 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- The layout of toolbar-->
-    <include layout="@layout/toolbar"
-        />
-
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_maps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:padding="10dp"
+        />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_maps"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp"
+    <LinearLayout
+        android:id="@+id/ll_no_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="192dp"
+            android:layout_height="192dp"
+            android:src="@drawable/empty_state"
             />
 
-        <RelativeLayout
-            android:id="@+id/rl_no_maps"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:padding="30dp">
+        <TextView
+            android:id="@+id/tv_no_maps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="No maps"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            />
 
-            <ImageView
-                android:layout_width="192dp"
-                android:layout_height="192dp"
-                android:layout_above="@+id/tv_no_maps"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/empty_state"
-                />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_activity_hint"
+            android:textSize="16sp"
+            />
 
-            <TextView
-                android:id="@+id/tv_no_maps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:text="You have no maps"
-                android:textColor="#86878A"
-                android:textSize="24sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_no_maps"
-                android:padding="4dp"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:text="Click the button to add activity with map"
-                android:textColor="#6D6E70"
-                android:textSize="16sp"
-                />
-
-            <Button
-                android:id="@+id/add_activity_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:layout_alignParentBottom="true"
-                android:textAllCaps="false"
-                android:clickable="true"
-                android:text="Add activity"
-                android:textSize="18sp"
-                style="@style/AppButton"
-                />
-
-        </RelativeLayout>
-    </RelativeLayout>
-</LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
