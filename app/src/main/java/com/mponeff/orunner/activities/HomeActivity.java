@@ -55,6 +55,10 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.fab)
     FloatingActionButton mFab;
 
+    private Fragment mFragment = null;
+    private boolean mItemSelected = false;
+    private String mTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +70,8 @@ public class HomeActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        mToolbarTitle.setText(R.string.frag_overview);
+        mTitle = getResources().getString(R.string.frag_overview);
+        mToolbarTitle.setText(mTitle);
 
         setupDrawer(mNavView);
 
@@ -82,7 +86,6 @@ public class HomeActivity extends AppCompatActivity {
                 showSportsDialog();
             }
         });
-
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -113,6 +116,41 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 selectDrawerItem(item);
                 return true;
+            }
+        });
+
+        mDrawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                if (mItemSelected) {
+                    mItemSelected = !mItemSelected;
+
+                    /* mFragment is set for all menu items except R.id.log_out which is activity */
+                    if (mFragment == null) {
+                        signOut();
+                    } else {
+                        FragmentManager fm = getSupportFragmentManager();
+                        FragmentTransaction ft = fm.beginTransaction();
+                        ft.replace(R.id.content_frame, mFragment);
+                        ft.commit();
+
+                        mFragment = null;
+                        mToolbarTitle.setText(mTitle);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
             }
         });
     }
@@ -154,42 +192,41 @@ public class HomeActivity extends AppCompatActivity {
 
     private void selectDrawerItem(MenuItem item) {
         int id = item.getItemId();
-        Fragment fragment = null;
+        mItemSelected = true;
         switch (id) {
             case R.id.home:
-                fragment = new OverviewFragment();
+                mFragment = new OverviewFragment();
+                mTitle = "Overview";
                 mFab.show();
                 break;
             case R.id.activities:
-                fragment = new HistoryFragment();
+                mFragment = new HistoryFragment();
+                mTitle = "History";
                 mFab.show();
                 break;
             case R.id.log_out:
                 signOut();
                 break;
             case R.id.maps:
-                fragment = new MapsFragment();
+                mFragment = new MapsFragment();
+                mTitle = "Maps archive";
                 mFab.show();
                 break;
             case R.id.settings:
-                fragment = new SettingsFragment();
+                mFragment = new SettingsFragment();
+                mTitle = "Settings";
                 mFab.hide();
                 break;
             case R.id.reports:
-                fragment = new MonthReportsFragment();
+                mFragment = new MonthReportsFragment();
+                mTitle = "Month reports";
                 mFab.show();
                 break;
             case R.id.about:
-                fragment = new AboutFragment();
+                mFragment = new AboutFragment();
+                mTitle = "About";
                 mFab.hide();
         }
-
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_frame, fragment);
-        ft.commit();
-
-        mToolbarTitle.setText(item.getTitle());
 
         mDrawer.closeDrawer(GravityCompat.START);
     }
