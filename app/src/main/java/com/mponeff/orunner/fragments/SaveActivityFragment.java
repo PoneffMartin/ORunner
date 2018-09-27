@@ -1,10 +1,12 @@
 package com.mponeff.orunner.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +70,7 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
     private static final int DURATION_INPUT_LIMIT = 8;
     private static final int PICK_PHOTO_CODE = 1046;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_PERMISSIONS_CODE = 3;
 
     /* Common views*/
     @BindView(R.id.main_toolbar)
@@ -519,7 +523,9 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
         mIbTakePhotoOfMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
+                if (hasPermissions()) {
+                    dispatchTakePictureIntent();
+                }
             }
         });
 
@@ -635,6 +641,25 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
         }
     }
 
+    private boolean hasPermissions() {
+        List<String> permissionsList = new ArrayList<>();
+        if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(Manifest.permission.CAMERA);
+
+        }
+        if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (!permissionsList.isEmpty()) {
+            requestPermissions(permissionsList.toArray(new String[permissionsList.size()]),
+                    REQUEST_PERMISSIONS_CODE);
+            return false;
+        }
+        return true;
+    }
     private boolean checkRequiredFields() {
         return mIsTitleFilled && mIsLocationFilled && mIsDistanceFilled && mIsDurationFilled && mIsControlsFilled;
     }
@@ -652,6 +677,28 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
         }
 
         Log.e(TAG, mCurrentPhotoPath);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_CODE) {
+            if (grantResults.length > 0) {
+                boolean granted = true;
+                for(int res : grantResults) {
+                    if (res == PackageManager.PERMISSION_DENIED) {
+                        granted = false;
+                        break;
+                    }
+                }
+
+                if (granted) {
+                    Log.e(TAG, "Permission granted");
+                    dispatchTakePictureIntent();
+                } else {
+                    Log.e(TAG, "Permission not granted"); // TODO What to do???
+                }
+            }
+        }
     }
 
     private File createImageFile(String fileName) throws IOException {
