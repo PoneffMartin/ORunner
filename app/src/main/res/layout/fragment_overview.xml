@@ -172,11 +172,25 @@
             </LinearLayout>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_history"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            />
+            android:layout_height="match_parent">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                />
+            <TextView
+                android:id="@+id/tv_no_activities"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="No activities this month"
+                android:textSize="20sp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

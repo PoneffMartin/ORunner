@@ -41,6 +41,8 @@ public class OverviewFragment extends Fragment {
 
     @BindView(R.id.rv_history)
     RecyclerView mRecyclerView;
+    @BindView(R.id.tv_no_activities)
+    TextView mTvNoActivities;
     @BindView(R.id.ll_custom_view)
     LinearLayout llCustomView;
     @BindView(R.id.tv_custom_field_1)
@@ -172,7 +174,9 @@ public class OverviewFragment extends Fragment {
 
         if (activities.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
+            mTvNoActivities.setVisibility(View.VISIBLE);
         } else {
+            mTvNoActivities.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.replaceAll(activities);
         }
