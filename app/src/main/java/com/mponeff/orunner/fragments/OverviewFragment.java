@@ -111,10 +111,9 @@ public class OverviewFragment extends Fragment {
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        /* Add swipe listener to the custom views layout */
-        llCustomView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+        llCustomView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSwipeRight() {
+            public void onClick(View view) {
                 swipeRight();
             }
         });
@@ -199,7 +198,6 @@ public class OverviewFragment extends Fragment {
     }
 
     private void swipeRight() {
-        Log.e(TAG, "onSwipeRight"); // TODO Remove
         mCustomViewPos++;
         mCustomViewPos %= mCustomViewsSize;
         slideDot(mCustomViewPos);
