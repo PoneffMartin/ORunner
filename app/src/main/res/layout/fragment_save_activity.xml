@@ -92,7 +92,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android.support.design:hintAnimationEnabled="false"
-                android.support.design:hintEnabled="false">
+                android.support.design:hintEnabled="false"
+                android.support.design:errorTextAppearance="@style/ErrorMsg">
 
                 <EditText
                     android:id="@+id/et_title"
@@ -114,7 +115,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android.support.design:hintAnimationEnabled="false"
-                android.support.design:hintEnabled="false">
+                android.support.design:hintEnabled="false"
+                android.support.design:errorTextAppearance="@style/ErrorMsg">
 
                 <EditText
                     android:id="@+id/et_location"

@@ -43,6 +43,11 @@
         <item name="android:layout_marginBottom">4dp</item>
     </style>
 
+    <style name="ErrorMsg" parent="Base.TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="AppButton">
         <item name="android:popupBackground">#BEFFFFFF</item>
         <item name="android:background">@drawable/btn_next</item>
