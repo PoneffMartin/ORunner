@@ -196,21 +196,21 @@ public class HomeActivity extends AppCompatActivity {
                 title = getString(R.string.frag_maps_archive);
                 showFab = true;
                 break;
-            case R.id.settings:
-                fragment = new SettingsFragment();
-                title = getString(R.string.frag_settings);
-                showFab = false;
-                break;
             case R.id.reports:
                 fragment = new MonthReportsFragment();
                 title = getString(R.string.frag_month_reports);
                 showFab = true;
                 break;
+            /*case R.id.settings:
+                fragment = new SettingsFragment();
+                title = getString(R.string.frag_settings);
+                showFab = false;
+                break;
             case R.id.about:
                 fragment = new AboutFragment();
                 title = getString(R.string.frag_about);
                 showFab = false;
-                break;
+                break;*/
             default:
                 fragment = null;
                 title = "";

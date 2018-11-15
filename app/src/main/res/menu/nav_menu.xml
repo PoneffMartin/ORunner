@@ -33,21 +33,21 @@
             />
     </group>
 
-    <group>
+    <!--<group>
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_nav_settings"
             android:title="Settings"
             />
-    </group>
+    </group>-->
 
-    <group >
+    <!--<group >
         <item
             android:id="@+id/about"
             android:icon="@drawable/ic_nav_about"
             android:title="About"
             />
-    </group>
+    </group>-->
 
     <group>
         <item
