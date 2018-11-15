@@ -412,6 +412,7 @@
                         android:ems="2"
                         android:gravity="center_horizontal"
                         android:inputType="number"
+                        android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:maxLength="3"
                         style="@style/SaveActivityEditText"

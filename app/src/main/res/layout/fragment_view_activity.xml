@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    tools:text="Sep 26, 2016"
+                    tools:text="26-SEP-2016"
                     style="@style/SaveActivityEditText"
                     />
 
@@ -62,27 +62,53 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Title -->
-                <TextView
-                    android:id="@+id/tv_title"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAllCaps="false"
-                    style="@style/SaveActivityEditText"
-                    tools:text="Title"
-                    />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title"
+                        android:layout_marginBottom="0dp"
+                        style="@style/SaveActivityViewTitle"
+                        />
 
-                <!-- Location -->
-                <TextView
-                    android:id="@+id/tv_location"
+                    <!-- Title -->
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAllCaps="false"
+                        style="@style/SaveActivityEditText"
+                        tools:text="Title"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textSize="20sp"
-                    android:textAllCaps="false"
-                    style="@style/SaveActivityEditText"
-                    tools:text="Location"
-                    />
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/location"
+                        android:layout_marginBottom="0dp"
+                        style="@style/SaveActivityViewTitle"
+                        />
+
+                    <!-- Location -->
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:textAllCaps="false"
+                        style="@style/SaveActivityEditText"
+                        tools:text="Location"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Divider -->
