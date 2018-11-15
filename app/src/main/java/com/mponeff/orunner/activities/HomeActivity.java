@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -61,6 +62,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black);
@@ -89,6 +92,12 @@ public class HomeActivity extends AppCompatActivity {
                 showSportsDialog();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        super.onStop();
     }
 
     @Override
@@ -180,7 +189,7 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.log_out:
                 fragment = null;
                 title = "";
-                signOut();
+                FirebaseAuth.getInstance().signOut();
                 break;
             case R.id.maps:
                 fragment = new MapsFragment();
@@ -228,16 +237,20 @@ public class HomeActivity extends AppCompatActivity {
         mDrawer.closeDrawer(GravityCompat.START);
     }
 
-    private void signOut() {
-        FirebaseAuth.getInstance().signOut();
-        startSignInActivity();
-    }
+    private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            if (firebaseAuth.getCurrentUser() == null) {
+                // User signed out
+                startSignInActivity();
+            }
+        }
+    };
 
     private void startSignInActivity() {
         Intent signInActivity = new Intent(HomeActivity.this, LoginActivity.class);
-        /*signInActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        signInActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);*/
+        signInActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        signInActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(signInActivity);
-        //finish();
     }
 }
