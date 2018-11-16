@@ -48,8 +48,7 @@ public class MonthReportsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_month_reports, container, false);
         ButterKnife.bind(this, rootView);
 
-        mMonthReportsRecyclerView.setHasFixedSize(true);
-        mMonthReportsRecyclerView.setItemAnimator(null);
+        mMonthReportsRecyclerView.setHasFixedSize(false);
         mMonthReportsRecyclerView.setNestedScrollingEnabled(false);
         mMonthReportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
