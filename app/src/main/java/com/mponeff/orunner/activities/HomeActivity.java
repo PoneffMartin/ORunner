@@ -6,14 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,14 +29,12 @@ import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mponeff.orunner.R;
-import com.mponeff.orunner.fragments.AboutFragment;
 import com.mponeff.orunner.fragments.ChooseTypeDialog;
 import com.mponeff.orunner.fragments.HistoryFragment;
 import com.mponeff.orunner.fragments.MapsFragment;
 import com.mponeff.orunner.fragments.MonthReportsFragment;
 import com.mponeff.orunner.fragments.OverviewFragment;
 import com.mponeff.orunner.fragments.SettingsFragment;
-import com.mponeff.orunner.utils.Network;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,10 +43,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
 
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawer;
-    @BindView(R.id.nav_view)
-    NavigationView mNavView;
+    @BindView(R.id.navigation)
+    BottomNavigationView mBottomNavigationView;
     @BindView(R.id.main_toolbar)
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
@@ -66,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_profile);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -74,12 +70,17 @@ public class HomeActivity extends AppCompatActivity {
         String title = getString(R.string.frag_overview);
         mToolbarTitle.setText(title);
 
-        setupDrawer(mNavView);
+        /* Set scrolling behaviour for bottom navigation bar. Hide/show on scroll */
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationViewBehavior());
 
-        /** TODO: What to do when offline */
-        if (!Network.hasNetworkConnection(this)) {
-            Snackbar.make(mDrawer, "Offline", Snackbar.LENGTH_LONG).show();
-        }
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectDrawerItem(item);
+                return true;
+            }
+        });
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -101,19 +102,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
-            mDrawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                mDrawer.openDrawer(GravityCompat.START);
+                //open profile page
                 return true;
         }
 
@@ -123,17 +115,6 @@ public class HomeActivity extends AppCompatActivity {
     private void showSportsDialog() {
         ChooseTypeDialog sportsDialog = new ChooseTypeDialog();
         sportsDialog.show(getSupportFragmentManager(), null);
-    }
-
-    private void setupDrawer(NavigationView navigationView) {
-        setProfileInfo(navigationView);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                selectDrawerItem(item);
-                return true;
-            }
-        });
     }
 
     private void setProfileInfo(NavigationView navigationView) {
@@ -172,8 +153,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void selectDrawerItem(MenuItem item) {
-        Fragment fragment;
-        String title;
+        Fragment fragment = null;
+        String title = "";
         boolean showFab = false;
         switch (item.getItemId()) {
             case R.id.home:
@@ -186,11 +167,6 @@ public class HomeActivity extends AppCompatActivity {
                 title = getString(R.string.frag_history);
                 showFab = true;
                 break;
-            case R.id.log_out:
-                fragment = null;
-                title = "";
-                FirebaseAuth.getInstance().signOut();
-                break;
             case R.id.maps:
                 fragment = new MapsFragment();
                 title = getString(R.string.frag_maps_archive);
@@ -201,25 +177,16 @@ public class HomeActivity extends AppCompatActivity {
                 title = getString(R.string.frag_month_reports);
                 showFab = true;
                 break;
-            /*case R.id.settings:
+            case R.id.settings:
                 fragment = new SettingsFragment();
                 title = getString(R.string.frag_settings);
                 showFab = false;
                 break;
-            case R.id.about:
-                fragment = new AboutFragment();
-                title = getString(R.string.frag_about);
-                showFab = false;
-                break;*/
-            default:
-                fragment = null;
-                title = "";
         }
 
         /* Do not replace the fragments if the selected fragment is the current one */
         boolean replace = !getSupportFragmentManager().findFragmentById(R.id.content_frame).getTag().equals(title);
 
-        /* fragment is set for all menu items except R.id.log_out which is activity and is started in the case block */
         if (fragment != null && replace) {
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
@@ -233,8 +200,6 @@ public class HomeActivity extends AppCompatActivity {
                 mFab.hide();
             }
         }
-
-        mDrawer.closeDrawer(GravityCompat.START);
     }
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -252,5 +217,46 @@ public class HomeActivity extends AppCompatActivity {
         signInActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         signInActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(signInActivity);
+    }
+
+    /* Helper class which hides/shows the bottom nav bar on scroll */
+    private class BottomNavigationViewBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
+        private int height;
+
+        @Override
+        public boolean onLayoutChild(CoordinatorLayout parent, BottomNavigationView child, int layoutDirection) {
+            height = child.getHeight();
+            return super.onLayoutChild(parent, child, layoutDirection);
+        }
+
+        @Override
+        public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout,
+                                           @NonNull BottomNavigationView child,
+                                           @NonNull View directTargetChild, @NonNull View target,
+                                           int axes, int type) {
+            return axes == ViewCompat.SCROLL_AXIS_VERTICAL;
+        }
+
+        @Override
+        public void onNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull BottomNavigationView child,
+                                   @NonNull View target, int dxConsumed, int dyConsumed,
+                                   int dxUnconsumed, int dyUnconsumed,
+                                   @ViewCompat.NestedScrollType int type) {
+            if (dyConsumed > 0) {
+                slideDown(child);
+            } else if (dyConsumed < 0) {
+                slideUp(child);
+            }
+        }
+
+        private void slideUp(BottomNavigationView child) {
+            child.clearAnimation();
+            child.animate().translationY(0).setDuration(200);
+        }
+
+        private void slideDown(BottomNavigationView child) {
+            child.clearAnimation();
+            child.animate().translationY(height).setDuration(200);
+        }
     }
 }
