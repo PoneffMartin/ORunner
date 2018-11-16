@@ -1,60 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="Home"
+        />
 
-    <group>
-        <item
-            android:id="@+id/home"
-            android:icon="@drawable/ic_nav_home"
-            android:title="Home"
-            />
-    </group>
-
-    <group>
-        <item
-            android:id="@+id/activities"
-            android:icon="@drawable/ic_nav_activities"
-            android:title="Activities"
-            />
-    </group>
-
-    <group>
-        <item
-            android:id="@+id/maps"
-            android:icon="@drawable/ic_nav_maps"
-            android:title="Maps"
-            />
-    </group>
-
-    <group>
-        <item
-            android:id="@+id/reports"
-            android:icon="@drawable/ic_nav_reports"
-            android:title="Reports"
-            />
-    </group>
-
-    <!--<group>
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/ic_nav_settings"
-            android:title="Settings"
-            />
-    </group>-->
-
-    <!--<group >
-        <item
-            android:id="@+id/about"
-            android:icon="@drawable/ic_nav_about"
-            android:title="About"
-            />
-    </group>-->
-
-    <group>
-        <item
-            android:id="@+id/log_out"
-            android:icon="@drawable/ic_nav_logout"
-            android:title="Log out"
-            />
-    </group>
-
+    <item
+        android:id="@+id/activities"
+        android:icon="@drawable/ic_nav_activities"
+        android:title="Activities"
+        />
+    <item
+        android:id="@+id/maps"
+        android:icon="@drawable/ic_nav_maps"
+        android:title="Maps"
+        />
+    <item
+        android:id="@+id/reports"
+        android:icon="@drawable/ic_nav_reports"
+        android:title="Reports"
+        />
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_nav_settings"
+        android:title="Settings"
+        />
 </menu>
