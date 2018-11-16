@@ -69,19 +69,26 @@ public class OverviewFragment extends Fragment {
 
         int currentYear = DateTimeUtils.getCurrentYear();
         int currentMonth = DateTimeUtils.getCurrentMonth();
+
+        /* Initialize custom views array */
+        mCustomViews[0] = new CustomView("0", getString(R.string.activities));
+        mCustomViews[1] = new CustomView("0.0", getString(R.string.distance));
+        mCustomViews[2] = new CustomView("00:00:00", getString(R.string.duration));
+
         ActivitiesModel activitiesModel = ViewModelProviders.of(this).get(ActivitiesModel.class);
         activitiesModel.getActivities(currentYear, currentMonth).observe(this, activities -> {
             this.showOverview(activities);
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_overview, container, false);
         ButterKnife.bind(this, rootView);
+
+        // Display initial views
+        showOverview(null);
 
         /* Draw background chart ring */
         mChart.configureAngles(300, 0);
@@ -95,7 +102,7 @@ public class OverviewFragment extends Fragment {
             /* Order activities by date starting from latest */
             @Override
             public int compare(Activity activity1, Activity activity2) {
-                return Long.valueOf(activity2.getStartDateTime()).compareTo(activity1.getStartDateTime());
+                return Long.compare(activity2.getStartDateTime(), activity1.getStartDateTime());
             }
         });
 
@@ -154,31 +161,25 @@ public class OverviewFragment extends Fragment {
     }
 
     private void showOverview(List<Activity> activities) {
-        MonthReport monthReport = new MonthReport(activities);
-        loadChart(monthReport);
-
-        /* Initialize custom views array */
-        /* TODO Export string resources */
-        mCustomViews[0] = new CustomView(String.valueOf(monthReport.getTotalActivities()), "Activities");
-        mCustomViews[1] = new CustomView(String.valueOf(monthReport.getTotalDistance()), "Distance");
-        mCustomViews[2] = new CustomView(DateTimeUtils.convertSecondsToTimeString(monthReport.getTotalDuration()), "Duration");
-
-        /* Set initial custom view and slider position */
-        tvCustomField_1.setText(mCustomViews[0].getField_1());
-        tvCustomField_2.setText(mCustomViews[0].getField_2());
-        slideDot(0);
-
-        tvTrainingsCount.setText(String.valueOf(monthReport.getTrainingsCount()));
-        tvCompetitionsCount.setText(String.valueOf(monthReport.getCompetitionsCount()));
-
-        if (activities.isEmpty()) {
+        if (activities == null || activities.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mTvNoActivities.setVisibility(View.VISIBLE);
         } else {
+            MonthReport monthReport = new MonthReport(activities);
+            loadChart(monthReport);
+            mCustomViews[0].setField_1(String.valueOf(monthReport.getTotalActivities()));
+            mCustomViews[1].setField_1(String.valueOf(monthReport.getTotalDistance()));
+            mCustomViews[2].setField_1(DateTimeUtils.convertSecondsToTimeString(monthReport.getTotalDuration()));
+            tvTrainingsCount.setText(String.valueOf(monthReport.getTrainingsCount()));
+            tvCompetitionsCount.setText(String.valueOf(monthReport.getCompetitionsCount()));
             mTvNoActivities.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.replaceAll(activities);
         }
+
+        tvCustomField_1.setText(mCustomViews[mCustomViewPos].getField_1());
+        tvCustomField_2.setText(mCustomViews[mCustomViewPos].getField_2());
+        slideDot(mCustomViewPos);
     }
 
     private void showActivityDetails(Activity activity) {
