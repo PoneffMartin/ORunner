@@ -1,15 +1,12 @@
 package com.mponeff.orunner.fragments;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +18,12 @@ import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mponeff.orunner.R;
-import com.mponeff.orunner.activities.ViewActivity;
 import com.mponeff.orunner.adapters.ActivityAdapter;
 import com.mponeff.orunner.data.entities.Activity;
 import com.mponeff.orunner.data.entities.CustomView;
 import com.mponeff.orunner.data.entities.MonthReport;
 import com.mponeff.orunner.utils.DateTimeUtils;
-import com.mponeff.orunner.utils.OnSwipeTouchListener;
-import com.mponeff.orunner.viewmodels.ActivitiesModel;
+import com.mponeff.orunner.viewmodels.ActivitiesViewModel;
 
 import java.util.Comparator;
 import java.util.List;
@@ -75,8 +70,8 @@ public class OverviewFragment extends Fragment {
         mCustomViews[1] = new CustomView("0.0", getString(R.string.distance));
         mCustomViews[2] = new CustomView("00:00:00", getString(R.string.duration));
 
-        ActivitiesModel activitiesModel = ViewModelProviders.of(this).get(ActivitiesModel.class);
-        activitiesModel.getActivities(currentYear, currentMonth).observe(this, activities -> {
+        ActivitiesViewModel activitiesViewModel = ViewModelProviders.of(this).get(ActivitiesViewModel.class);
+        activitiesViewModel.getActivities(currentYear, currentMonth).observe(this, activities -> {
             this.showOverview(activities);
         });
     }
@@ -95,7 +90,7 @@ public class OverviewFragment extends Fragment {
         mChart.addSeries(new SeriesItem.Builder(Color.parseColor("#565B77"))
                 .setRange(0, 100, 100)
                 .setInitialVisibility(true)
-                .setLineWidth(10f)
+                .setLineWidth(18f)
                 .build());
 
         mAdapter = new ActivityAdapter(getContext(), new Comparator<Activity>() {
@@ -103,13 +98,6 @@ public class OverviewFragment extends Fragment {
             @Override
             public int compare(Activity activity1, Activity activity2) {
                 return Long.compare(activity2.getStartDateTime(), activity1.getStartDateTime());
-            }
-        });
-
-        mAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Activity activity) {
-                showActivityDetails(activity);
             }
         });
 
@@ -168,7 +156,7 @@ public class OverviewFragment extends Fragment {
             MonthReport monthReport = new MonthReport(activities);
             loadChart(monthReport);
             mCustomViews[0].setField_1(String.valueOf(monthReport.getTotalActivities()));
-            mCustomViews[1].setField_1(String.valueOf(monthReport.getTotalDistance()));
+            mCustomViews[1].setField_1(String.format("%.1f", monthReport.getTotalDistance()));
             mCustomViews[2].setField_1(DateTimeUtils.convertSecondsToTimeString(monthReport.getTotalDuration()));
             tvTrainingsCount.setText(String.valueOf(monthReport.getTrainingsCount()));
             tvCompetitionsCount.setText(String.valueOf(monthReport.getCompetitionsCount()));
@@ -180,12 +168,6 @@ public class OverviewFragment extends Fragment {
         tvCustomField_1.setText(mCustomViews[mCustomViewPos].getField_1());
         tvCustomField_2.setText(mCustomViews[mCustomViewPos].getField_2());
         slideDot(mCustomViewPos);
-    }
-
-    private void showActivityDetails(Activity activity) {
-        Intent viewExercise = new Intent(getActivity(), ViewActivity.class);
-        viewExercise.putExtra("data", activity);
-        startActivity(viewExercise);
     }
 
     private void slideDot(int position) {

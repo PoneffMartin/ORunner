@@ -3,74 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp"
-    android:background="@android:color/white">
-
-    <View
-        android:id="@+id/type_indicator"
-        android:layout_width="4dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:background="@color/colorAccent">
-    </View>
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="8dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/type_indicator"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="14dp"
+            android:background="@color/colorAccent">
+        </View>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!-- Title -->
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:fontFamily="sans-serif-smallcaps"
-                tools:text="Trail running"
-                />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
-            <!-- Date-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="sans-serif-smallcaps"
+                    tools:text="Trail running"
+                    />
+
+                <!-- Date-->
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="end|center_vertical"
+                    android:textColor="@color/mdtp_line_dark"
+                    android:textSize="14sp"
+                    android:fontFamily="sans-serif-smallcaps"
+                    tools:text="28.01.2018"
+                    />
+            </LinearLayout>
+
+            <!-- Duration -->
             <TextView
-                android:id="@+id/tv_date"
+                android:id="@+id/tv_duration"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="end|center_vertical"
-                android:layout_marginEnd="16dp"
-                android:textColor="@color/mdtp_line_dark"
-                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
                 android:fontFamily="sans-serif-smallcaps"
-                tools:text="28.01.2018"
+                tools:text="01:23:50"
                 />
         </LinearLayout>
-
-        <!-- Location TODO Can be removed
-        <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@android:color/black"
-            android:fontFamily="sans-serif-smallcaps"
-            tools:text="Uzana"
-            />-->
-
-        <!-- Duration -->
-        <TextView
-            android:id="@+id/tv_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif-smallcaps"
-            tools:text="01:23:50"
-            />
     </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="@color/mdtp_neutral_pressed"
+        />
+
 </LinearLayout>

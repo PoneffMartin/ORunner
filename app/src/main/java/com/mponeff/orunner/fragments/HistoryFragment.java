@@ -1,7 +1,6 @@
 package com.mponeff.orunner.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mponeff.orunner.R;
-import com.mponeff.orunner.activities.ViewActivity;
 import com.mponeff.orunner.adapters.ActivityAdapter;
 import com.mponeff.orunner.data.entities.Activity;
-import com.mponeff.orunner.viewmodels.ActivitiesModel;
+import com.mponeff.orunner.viewmodels.ActivitiesViewModel;
 
 import java.util.Comparator;
 import java.util.List;
@@ -36,8 +34,8 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivitiesModel activitiesModel = ViewModelProviders.of(this).get(ActivitiesModel.class);
-        activitiesModel.getActivities().observe(this, activities -> {
+        ActivitiesViewModel activitiesViewModel = ViewModelProviders.of(this).get(ActivitiesViewModel.class);
+        activitiesViewModel.getActivities().observe(this, activities -> {
             this.showActivities(activities);
         });
     }
@@ -49,7 +47,8 @@ public class HistoryFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_history, container, false);
         ButterKnife.bind(this, rootView);
 
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mAdapter = new ActivityAdapter(getContext(), new Comparator<Activity>() {
@@ -59,23 +58,12 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        mAdapter.setOnItemClickListener(new ActivityAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Activity activity) {
-                showActivityDetails(activity);
-            }
-        });
-
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
 
     private void showActivities(List<Activity> activities) {
-        if (activities == null) {
-            return;
-        }
-
-        if (activities.isEmpty()) {
+        if (activities == null || activities.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mLlNoExercises.setVisibility(View.VISIBLE);
         } else {
@@ -83,11 +71,5 @@ public class HistoryFragment extends Fragment {
             mRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.replaceAll(activities);
         }
-    }
-
-    private void showActivityDetails(Activity activity) {
-        Intent viewExercise = new Intent(getActivity(), ViewActivity.class);
-        viewExercise.putExtra("data", activity);
-        startActivity(viewExercise);
     }
 }

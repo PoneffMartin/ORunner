@@ -14,8 +14,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ActivitiesModel extends AndroidViewModel {
-    public static final String TAG = ActivitiesModel.class.getSimpleName();
+public class ActivitiesViewModel extends AndroidViewModel {
+    public static final String TAG = ActivitiesViewModel.class.getSimpleName();
 
     @Inject
     ActivitiesDataSource mActivitiesDataSource;
@@ -25,7 +25,7 @@ public class ActivitiesModel extends AndroidViewModel {
 
     private ActivitiesDataSource.GetActivitiesCallback mGetActivitiesCallback;
 
-    public ActivitiesModel(@NonNull Application application) {
+    public ActivitiesViewModel(@NonNull Application application) {
         super(application);
         ((ORunnerApp) getApplication()).getDataSourceComponent().inject(this);
         this.mGetActivitiesCallback = this.createGetActivitiesCallback();
@@ -38,7 +38,7 @@ public class ActivitiesModel extends AndroidViewModel {
     public LiveData<List<Activity>> getActivities(int year, int month) {
         if (this.mActivities == null) {
             this.mActivities = new MutableLiveData<>();
-            loadActivities(year, month);
+            fetchActivities(year, month);
         }
 
         return this.mActivities;
@@ -89,7 +89,7 @@ public class ActivitiesModel extends AndroidViewModel {
     }
 
     // TODO Rename???
-    private void loadActivities(int year, int month) {
+    private void fetchActivities(int year, int month) {
         if (year == -1 && month == -1) {
             this.mActivitiesDataSource.getActivities(this.mGetActivitiesCallback);
         } else {

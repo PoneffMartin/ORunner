@@ -4,24 +4,21 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.mponeff.orunner.R;
 import com.mponeff.orunner.utils.DataValidation;
 import com.mponeff.orunner.utils.Errors;
@@ -33,16 +30,14 @@ import butterknife.ButterKnife;
 public class CreateAccountActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = CreateAccountActivity.class.getSimpleName();
 
-    @BindView(R.id.name_ti_layout)
-    TextInputLayout mTiUsername;
-    @BindView(R.id.email_ti_layout)
-    TextInputLayout mTiEmail;
-    @BindView(R.id.password_ti_layout)
-    TextInputLayout mTiPassword;
+    @BindView(R.id.et_email)
+    EditText mEtEmail;
+    @BindView(R.id.et_password)
+    TextInputEditText mEtPassword;
     @BindView(R.id.tv_error)
     TextView mTvError;
     @BindView(R.id.sign_up_button)
-    Button mEmailPasswordSignUpButton;
+    Button mBtnSignUp;
 
     private ProgressDialog mProgressDialog;
     private FirebaseAuth mAuth;
@@ -53,65 +48,43 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_create_account);
         ButterKnife.bind(this);
 
-        mEmailPasswordSignUpButton.setOnClickListener(this);
+        mBtnSignUp.setOnClickListener(this);
         mAuth = FirebaseAuth.getInstance();
 
-        /** Hide the soft input keyboard by default */
+        /* Hide the soft input keyboard by default */
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        if (mTiUsername.getEditText() != null) {
-            mTiUsername.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence text, int start, int count, int after) {
-                    mTvError.setText("");
-                }
+        mEtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                mTvError.setText("");
+            }
 
-                /** TODO Auto-generated method stubs */
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            /** TODO Auto-generated method stubs */
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
-        if (mTiEmail.getEditText() != null) {
-            mTiEmail.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence text, int start, int count, int after) {
-                    mTvError.setText("");
-                }
+        mEtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                mTvError.setText("");
+            }
 
-                /** TODO Auto-generated method stubs */
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            /** TODO Auto-generated method stubs */
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-        }
-
-        if (mTiPassword.getEditText() != null) {
-            mTiPassword.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence text, int start, int count, int after) {
-                    mTvError.setText("");
-                }
-
-                /** TODO Auto-generated method stubs */
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     @Override
@@ -125,9 +98,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         int i = v.getId();
         if (i == R.id.sign_up_button) {
             createAccount(
-                    mTiUsername.getEditText().getText().toString().trim(),
-                    mTiEmail.getEditText().getText().toString().trim(),
-                    mTiPassword.getEditText().getText().toString().trim());
+                    mEtEmail.getText().toString().trim(),
+                    mEtPassword.getText().toString().trim());
         }
     }
 
@@ -147,28 +119,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    /** Update the username, before starting home activity */
-    private void updateUserProfile() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(mTiUsername.getEditText().getText().toString().trim())
-                .build();
-
-        user.updateProfile(profileUpdates)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // TODO
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // TODO
-                    }
-                });
-    }
-
     private void startLoginActivity() {
         Intent loginActivity = new Intent(CreateAccountActivity.this, LoginActivity.class);
         loginActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -185,8 +135,8 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void createAccount(String username, String email, String password) {
-        if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+    private void createAccount(String email, String password) {
+        if (email.isEmpty() || password.isEmpty()) {
             mTvError.setText(Errors.E_MISSING_FIELDS);
         } else if (!DataValidation.isValidEmail(email)) {
             mTvError.setText(Errors.E_EMAIL_INVALID);
@@ -205,7 +155,6 @@ public class CreateAccountActivity extends AppCompatActivity implements View.OnC
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         hideProgress();
                         if (task.isSuccessful()) {
-                            updateUserProfile();
                             startLoginActivity();
                         } else {
                             showCreateAccountError();

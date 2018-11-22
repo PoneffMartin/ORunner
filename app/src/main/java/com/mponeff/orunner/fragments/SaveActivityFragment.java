@@ -44,7 +44,7 @@ import com.mponeff.orunner.data.entities.Activity;
 import com.mponeff.orunner.data.entities.Map;
 import com.mponeff.orunner.utils.Calculations;
 import com.mponeff.orunner.utils.DateTimeUtils;
-import com.mponeff.orunner.viewmodels.ActivitiesModel;
+import com.mponeff.orunner.viewmodels.ActivitiesViewModel;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -77,6 +77,8 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
+    @BindView(R.id.iv_logo)
+    ImageView mLogo;
     @BindView(R.id.tv_date_picker)
     TextView mTvDatePicker;
     @BindView(R.id.tv_time_picker)
@@ -162,7 +164,7 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
     private boolean mIsMapPhotoSet = false;
 
     private Uri mMapPhotoURI;
-    private ActivitiesModel mActivitiesModel;
+    private ActivitiesViewModel mActivitiesViewModel;
     private StringBuilder mDurationDigits;
     private StringBuilder mWinningTimeDigits;
 
@@ -176,7 +178,7 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mActivitiesModel = ViewModelProviders.of(this).get(ActivitiesModel.class);
+        mActivitiesViewModel = ViewModelProviders.of(this).get(ActivitiesViewModel.class);
         mDurationDigits = new StringBuilder("");
         mWinningTimeDigits = new StringBuilder("");
     }
@@ -191,6 +193,7 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.setSupportActionBar(mToolbar);
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mLogo.setVisibility(View.GONE);
         mToolbarTitle.setText(R.string.save_activity);
         mToolbar.setNavigationIcon(R.drawable.ic_clear_map);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -674,9 +677,8 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
             Log.e(TAG, "Photo choosen: fileUri: " + data.getData().toString());
             mCurrentPhotoPath = getRealPathFromUri(getContext(), data.getData());
             loadMapImage(data.getData());
+            Log.e(TAG, mCurrentPhotoPath);
         }
-
-        Log.e(TAG, mCurrentPhotoPath);
     }
 
     @Override
@@ -838,8 +840,8 @@ public class SaveActivityFragment extends Fragment implements DatePickerDialog.O
 
     private void saveActivity(Activity activity, boolean update) {
         showProgress();
-        mActivitiesModel.saveActivity(activity, update);
-        mActivitiesModel.isActivitySaved().observe(this, saved -> {
+        mActivitiesViewModel.saveActivity(activity, update);
+        mActivitiesViewModel.isActivitySaved().observe(this, saved -> {
             Log.e(TAG, "Value of bool livedata has changes to " + saved);
             if (saved) {
                 showActivitySavedMessage("Activity saved.");

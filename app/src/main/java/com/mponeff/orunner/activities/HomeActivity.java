@@ -1,15 +1,10 @@
 package com.mponeff.orunner.activities;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,28 +12,24 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.mponeff.orunner.R;
 import com.mponeff.orunner.fragments.ChooseTypeDialog;
 import com.mponeff.orunner.fragments.HistoryFragment;
 import com.mponeff.orunner.fragments.MapsFragment;
 import com.mponeff.orunner.fragments.MonthReportsFragment;
 import com.mponeff.orunner.fragments.OverviewFragment;
-import com.mponeff.orunner.fragments.SettingsFragment;
+import com.mponeff.orunner.fragments.ProfileFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
@@ -49,8 +40,6 @@ public class HomeActivity extends AppCompatActivity {
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
-    @BindView(R.id.fab)
-    FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +51,7 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_profile);
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         /* Set initial fragment title */
         String title = getString(R.string.frag_overview);
@@ -86,13 +73,6 @@ public class HomeActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.content_frame, new OverviewFragment(), title);
         ft.commit();
-
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSportsDialog();
-            }
-        });
     }
 
     @Override
@@ -102,10 +82,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.add_activity_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                //open profile page
+            case R.id.add_activity:
+                showSportsDialog();
                 return true;
         }
 
@@ -117,70 +104,29 @@ public class HomeActivity extends AppCompatActivity {
         sportsDialog.show(getSupportFragmentManager(), null);
     }
 
-    private void setProfileInfo(NavigationView navigationView) {
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header);
-        TextView profilePicPlaceholder = (TextView) headerView.findViewById(R.id.profile_picture_placeholder);
-        TextView usernameTv = (TextView) headerView.findViewById(R.id.tv_username);
-        TextView emailTv = (TextView) headerView.findViewById(R.id.tv_email);
-        CircleImageView profileImage = (CircleImageView) headerView.findViewById(R.id.iv_profile_pic);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            Uri userPhoto = user.getPhotoUrl();
-            String username = user.getDisplayName();
-            String email = user.getEmail();
-            profilePicPlaceholder.setText(String.valueOf(username.charAt(0))); // TODO Consider exception handling
-            usernameTv.setText(username);
-            emailTv.setText(email);
-            if (userPhoto != null) {
-                Glide.with(this)
-                        .load(userPhoto)
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                profilePicPlaceholder.setVisibility(View.GONE);
-                                profileImage.setVisibility(View.VISIBLE);
-                                return false;
-                            }
-                        })
-                        .into(profileImage);
-            }
-        }
-    }
-
     private void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
         String title = "";
-        boolean showFab = false;
         switch (item.getItemId()) {
             case R.id.home:
                 fragment = new OverviewFragment();
                 title = getString(R.string.frag_overview);
-                showFab = true;
                 break;
             case R.id.activities:
                 fragment = new HistoryFragment();
                 title = getString(R.string.frag_history);
-                showFab = true;
                 break;
             case R.id.maps:
                 fragment = new MapsFragment();
                 title = getString(R.string.frag_maps_archive);
-                showFab = true;
                 break;
             case R.id.reports:
                 fragment = new MonthReportsFragment();
                 title = getString(R.string.frag_month_reports);
-                showFab = true;
                 break;
-            case R.id.settings:
-                fragment = new SettingsFragment();
-                title = getString(R.string.frag_settings);
-                showFab = false;
+            case R.id.profile:
+                fragment = new ProfileFragment();
+                title = getString(R.string.frag_profile);
                 break;
         }
 
@@ -194,11 +140,6 @@ public class HomeActivity extends AppCompatActivity {
             ft.commit();
 
             mToolbarTitle.setText(title);
-            if (showFab) {
-                mFab.show();
-            } else {
-                mFab.hide();
-            }
         }
     }
 
@@ -242,9 +183,9 @@ public class HomeActivity extends AppCompatActivity {
                                    @NonNull View target, int dxConsumed, int dyConsumed,
                                    int dxUnconsumed, int dyUnconsumed,
                                    @ViewCompat.NestedScrollType int type) {
-            if (dyConsumed > 0) {
+            if ((dyConsumed | dyUnconsumed) > 0) {
                 slideDown(child);
-            } else if (dyConsumed < 0) {
+            } else if ((dyConsumed | dyUnconsumed) < 0) {
                 slideUp(child);
             }
         }

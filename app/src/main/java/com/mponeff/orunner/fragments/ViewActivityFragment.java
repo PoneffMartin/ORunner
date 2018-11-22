@@ -37,7 +37,7 @@ import com.mponeff.orunner.R;
 import com.mponeff.orunner.activities.SaveActivity;
 import com.mponeff.orunner.data.entities.Activity;
 import com.mponeff.orunner.utils.DateTimeUtils;
-import com.mponeff.orunner.viewmodels.ActivitiesModel;
+import com.mponeff.orunner.viewmodels.ActivitiesViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +52,8 @@ public class ViewActivityFragment extends Fragment {
     Toolbar mToolbar;
     @BindView(R.id.toolbar_title)
     TextView mToolbarTitle;
+    @BindView(R.id.iv_logo)
+    ImageView mLogo;
     @BindView(R.id.tv_date)
     TextView mTvStartDate;
     @BindView(R.id.tv_time)
@@ -96,14 +98,14 @@ public class ViewActivityFragment extends Fragment {
     View mHorizontalDivider_2;
 
     private ProgressDialog mProgressDialog;
-    private ActivitiesModel mActivitiesModel;
+    private ActivitiesViewModel mActivitiesViewModel;
     private Activity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mActivitiesModel = ViewModelProviders.of(this).get(ActivitiesModel.class);
+        mActivitiesViewModel = ViewModelProviders.of(this).get(ActivitiesViewModel.class);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -119,6 +121,7 @@ public class ViewActivityFragment extends Fragment {
         AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.setSupportActionBar(mToolbar);
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mLogo.setVisibility(View.GONE);
         mToolbarTitle.setText(mActivity.getTitle());
         mToolbar.setNavigationIcon(R.drawable.ic_back_black);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -236,8 +239,8 @@ public class ViewActivityFragment extends Fragment {
     }
 
     private void deleteActivity(Activity activity) {
-        mActivitiesModel.deleteActivity(activity);
-        mActivitiesModel.isActivityDeleted().observe(this, deleted -> {
+        mActivitiesViewModel.deleteActivity(activity);
+        mActivitiesViewModel.isActivityDeleted().observe(this, deleted -> {
             if (deleted) {
                 showActivityDeletedMessage("Activity deleted.");
             } else {

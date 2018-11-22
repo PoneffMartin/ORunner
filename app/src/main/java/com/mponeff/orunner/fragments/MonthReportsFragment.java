@@ -70,7 +70,7 @@ public class MonthReportsFragment extends Fragment {
     }
 
     private void showReports(List<MonthReport> reports) {
-        if (reports.isEmpty()) {
+        if (reports == null || reports.isEmpty()) {
             mLlNoMonthReports.setVisibility(View.VISIBLE);
             mMonthReportsRecyclerView.setVisibility(View.GONE);
         } else {

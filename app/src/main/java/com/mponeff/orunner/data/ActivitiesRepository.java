@@ -1,6 +1,5 @@
 package com.mponeff.orunner.data;
 
-import android.app.Application;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -32,14 +31,12 @@ import java.util.List;
 public class ActivitiesRepository implements ActivitiesDataSource {
 
     private static final String TAG = ActivitiesRepository.class.getSimpleName();
-    private Application mApp;
-    private static final String FIREBASE_STORAGE_URL = "gs://orunner-85139.appspot.com";
+    private static final String FIREBASE_STORAGE_URL = "gs://orunner-d4795.appspot.com";
     private ValueEventListener mValueEventListener;
     private DatabaseReference mActivitiesRef;
     private StorageReference mMapsRef;
 
-    public ActivitiesRepository(Application application) {
-        this.mApp = application;
+    public ActivitiesRepository() {
         /** Create database and storage references */
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.mActivitiesRef = FirebaseDatabase.getInstance().getReference()
@@ -183,7 +180,8 @@ public class ActivitiesRepository implements ActivitiesDataSource {
             Log.e(TAG, fne.toString());
             throw new RuntimeException();
         }
-        this.mMapsRef.child("maps/" + file.getName()).putStream(stream).addOnFailureListener(
+        StorageReference ref = this.mMapsRef.child("maps/" + file.getName());
+        ref.putStream(stream).addOnFailureListener(
                 new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -192,9 +190,14 @@ public class ActivitiesRepository implements ActivitiesDataSource {
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        String downloadUri = taskSnapshot.getDownloadUrl().toString();
-                        map.setDownloadUri(downloadUri);
-                        callback.onSuccess();
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String downloadUri = uri.toString();
+                                map.setDownloadUri(downloadUri);
+                                callback.onSuccess();
+                            }
+                        });
                     }
                 });
     }

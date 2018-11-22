@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class MapsAdapter extends RecyclerView.Adapter<MapsAdapter.CardViewViewHolder> {
 
-    private static final String LOG_TAG = MapsAdapter.class.getSimpleName();
+    private static final String TAG = MapsAdapter.class.getSimpleName();
     private Comparator<Map> mComparator;
     private Context mContext;
     private OnItemClickListener mOnClickListener;
@@ -91,7 +91,6 @@ public class MapsAdapter extends RecyclerView.Adapter<MapsAdapter.CardViewViewHo
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
-
 
         @Override
         public void onClick(View view) {

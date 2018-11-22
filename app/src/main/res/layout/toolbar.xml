@@ -5,6 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@color/mdtp_white">
 
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/orienteering_symbol"
+        android:padding="1dp"
+        android:background="#000000"
+        />
+
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"

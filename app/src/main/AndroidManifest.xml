@@ -30,22 +30,22 @@
 
         <activity
             android:name=".activities.SaveActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ViewActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CreateAccountActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.HomeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ViewMapActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

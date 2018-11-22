@@ -22,8 +22,8 @@
         android:title="Reports"
         />
     <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_nav_settings"
-        android:title="Settings"
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_profile"
+        android:title="Profile"
         />
 </menu>

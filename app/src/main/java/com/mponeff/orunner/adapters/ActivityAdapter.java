@@ -1,16 +1,17 @@
 package com.mponeff.orunner.adapters;
 
+import android.app.ActivityOptions;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mponeff.orunner.R;
+import com.mponeff.orunner.activities.ViewActivity;
 import com.mponeff.orunner.data.entities.Activity;
 import com.mponeff.orunner.utils.DateTimeUtils;
 
@@ -22,15 +23,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
 
     private final Context mContext;
     private final Comparator<Activity> mComparator;
-    private OnItemClickListener mOnClickListener;
-
-    public interface OnItemClickListener {
-        void onItemClick(Activity activity);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.mOnClickListener = listener;
-    }
 
     private final SortedList<Activity> mSortedList = new SortedList<>(Activity.class,
             new SortedList.Callback<Activity>() {
@@ -76,17 +68,13 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
     }
 
     public class ActivityViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        ImageView ivActivity;
         View typeIndicator;
-        //TextView tvLocation;
         TextView tvTitle;
         TextView tvDuration;
         TextView tvDate;
 
         ActivityViewHolder(View itemView) {
             super(itemView);
-            //ivActivity = (ImageView) itemView.findViewById(R.id.iv_type);
-            //tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
             typeIndicator = itemView.findViewById(R.id.type_indicator);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             tvDuration = (TextView) itemView.findViewById(R.id.tv_duration);
@@ -99,7 +87,10 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         public void onClick(View view) {
             int position = getLayoutPosition();
             Activity activity = mSortedList.get(position);
-            mOnClickListener.onItemClick(activity);
+            Intent viewExercise = new Intent(mContext, ViewActivity.class);
+            viewExercise.putExtra("data", activity);
+            mContext.startActivity(viewExercise,
+                    ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getMeasuredWidth(), view.getMeasuredHeight()).toBundle());
         }
     }
 
@@ -119,15 +110,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         // Get the data model
         Activity activity = mSortedList.get(position);
 
-        if(position % 2 == 1) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#f8f8f8"));
-        }
-        else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        }
-
         // Get each View item
-        //TextView  tvLocation = holder.tvLocation;
         View typeIndicator = holder.typeIndicator;
         TextView  tvTitle = holder.tvTitle;
         TextView  tvDuration = holder.tvDuration;
@@ -140,8 +123,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Activi
         } else {
             color = R.color.competition;
         }
-        //ivExercise.setImageResource(image);
-        //tvLocation.setText(activity.getLocation());
         typeIndicator.setBackgroundResource(color);
         tvTitle.setText(activity.getTitle());
         tvDuration.setText(DateTimeUtils.convertSecondsToTimeString(activity.getDuration()));

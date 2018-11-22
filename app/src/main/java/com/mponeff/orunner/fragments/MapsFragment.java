@@ -49,7 +49,8 @@ public class MapsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_maps_history, container, false);
         ButterKnife.bind(this, rootView);
 
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mAdapter = new MapsAdapter(getContext(), new Comparator<Map>() {
@@ -71,7 +72,7 @@ public class MapsFragment extends Fragment {
     }
 
     public void showMaps(List<Map> maps) {
-        if (maps.isEmpty()) {
+        if (maps == null || maps.isEmpty()) {
             mRecyclerView.setVisibility(View.GONE);
             mLlNoMaps.setVisibility(View.VISIBLE);
         } else {

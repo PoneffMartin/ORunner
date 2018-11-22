@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mponeff.orunner.R;
 import com.mponeff.orunner.utils.Errors;
@@ -41,10 +41,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.tv_error)
     TextView mTvError;
-    @BindView(R.id.password_ti_layout)
-    TextInputLayout mTiPassword;
-    @BindView(R.id.email_ti_layout)
-    TextInputLayout mTiEmail;
+    @BindView(R.id.et_email)
+    EditText mEtEmail;
+    @BindView(R.id.et_password)
+    TextInputEditText mEtPassword;
     @BindView(R.id.sign_in_button)
     Button mEmailPasswordSignInButton;
     @BindView(R.id.tv_create_account)
@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "Login activity");
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
@@ -74,47 +73,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                .requestScopes(new Scope(Scopes.PROFILE))
-                .requestIdToken("1064970406194-hiu3g138psdiobp79hid5m5maejqgdac.apps.googleusercontent.com") // TODO Export
+                .requestIdToken("166364071777-4rrv39qveaadoniarb8kdksouq7sa852.apps.googleusercontent.com") // TODO Export
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        if (mTiEmail.getEditText() != null) {
-            mTiEmail.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence text, int start, int count, int after) {
-                    mTvError.setText("");
-                }
+        mEtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                mTvError.setText("");
+            }
 
-                // TODO Auto-generated method stubs
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            // TODO Auto-generated method stubs
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
-        if (mTiPassword.getEditText() != null) {
-            mTiPassword.getEditText().addTextChangedListener(new TextWatcher() {
-                @Override
-                public void onTextChanged(CharSequence text, int start, int count, int after) {
-                    mTvError.setText("");
-                }
+        mEtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence text, int start, int count, int after) {
+                mTvError.setText("");
+            }
 
-                // TODO Auto-generated method stubs
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+            // TODO Auto-generated method stubs
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     @Override
@@ -130,8 +124,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             signInWithGoogle();
         } else if (i == R.id.sign_in_button) {
             loginWithEmail(
-                    mTiEmail.getEditText().getText().toString().trim(),
-                    mTiPassword.getEditText().getText().toString().trim());
+                    mEtEmail.getText().toString().trim(),
+                    mEtPassword.getText().toString().trim());
         } else if (i == R.id.tv_create_account) {
             createAccount();
         }
@@ -195,6 +189,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                Log.e(TAG, "errorCode[G]: " + e.getStatusCode());
                 showLoginError();
             }
         }
@@ -208,7 +203,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
                             startHomeActivity();
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",

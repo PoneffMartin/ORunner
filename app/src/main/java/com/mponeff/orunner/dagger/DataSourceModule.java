@@ -15,7 +15,7 @@ public class DataSourceModule {
 
     @Provides
     @Singleton
-    ActivitiesDataSource provideExercisesDataSource(Application application) {
-        return new ActivitiesRepository(application);
+    ActivitiesDataSource provideActivitiesDataSource(Application application) {
+        return new ActivitiesRepository();
     }
 }

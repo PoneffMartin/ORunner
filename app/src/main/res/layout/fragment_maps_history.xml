@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_maps"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/ll_no_maps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="192dp"
-            android:layout_height="192dp"
-            android:src="@drawable/empty_state"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_maps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
             />
 
-        <TextView
-            android:id="@+id/tv_no_maps"
+        <LinearLayout
+            android:id="@+id/ll_no_maps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:text="No maps"
-            android:textColor="#000000"
-            android:textSize="20sp"
-            />
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_activity_hint"
-            android:textSize="16sp"
-            />
+            <TextView
+                android:id="@+id/tv_no_maps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="No maps"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                />
 
-    </LinearLayout>
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click the plus button to add activity with map"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

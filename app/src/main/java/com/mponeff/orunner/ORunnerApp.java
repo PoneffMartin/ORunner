@@ -1,7 +1,6 @@
 package com.mponeff.orunner;
 
 import android.content.Context;
-import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,8 +25,6 @@ public class ORunnerApp extends MultiDexApplication {
         mDataSourceComponent = initDataSourceComponent();
         /* Enable disk persistence when offline */
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        /* Set default Settings on start of application */
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     }
 
     public AppComponent getAppComponent() {
